@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="DemoApp.cpp" />
+    <ClCompile Include="GameTimer.cpp" />
+    <ClCompile Include="MapManager.cpp" />
+    <ClCompile Include="Character.cpp">
+      <Filter>Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="Spawn.cpp">
+      <Filter>Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="Spiny.cpp">
+      <Filter>Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="Turtle.cpp">
+      <Filter>Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="Keyboard.cpp">
+      <Filter>InputControl</Filter>
+    </ClCompile>
+    <ClCompile Include="InputDevice.cpp">
+      <Filter>InputControl</Filter>
+    </ClCompile>
+    <ClCompile Include="Gamepad.cpp">
+      <Filter>InputControl</Filter>
+    </ClCompile>
+    <ClCompile Include="XButtonIDs.cpp">
+      <Filter>InputControl</Filter>
+    </ClCompile>
+    <ClCompile Include="Luigi.cpp">
+      <Filter>Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="Mario.cpp">
+      <Filter>Characters</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DemoApp.h" />
+    <ClInclude Include="GameTimer.h" />
+    <ClInclude Include="helpingCode.h" />
+    <ClInclude Include="MapManager.h" />
+    <ClInclude Include="Character.h">
+      <Filter>Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="Spawn.h">
+      <Filter>Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="Spiny.h">
+      <Filter>Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="Turtle.h">
+      <Filter>Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="GameManager.h" />
+    <ClInclude Include="Keyboard.h">
+      <Filter>InputControl</Filter>
+    </ClInclude>
+    <ClInclude Include="InputDevice.h">
+      <Filter>InputControl</Filter>
+    </ClInclude>
+    <ClInclude Include="Gamepad.h">
+      <Filter>InputControl</Filter>
+    </ClInclude>
+    <ClInclude Include="XButtonIDs.h">
+      <Filter>InputControl</Filter>
+    </ClInclude>
+    <ClInclude Include="Luigi.h">
+      <Filter>Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="Mario.h">
+      <Filter>Characters</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Characters">
+      <UniqueIdentifier>{c7812346-8886-47f7-9491-7722fdad18dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{2e7f8a76-edd4-46ae-887e-a202f1296c39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="InputControl">
+      <UniqueIdentifier>{2c364e86-d129-49e6-a0b6-201117a7734f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DrawRectangleExample.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\tileset1.bmp">
+      <Filter>Resources</Filter>
+    </Image>
+    <Image Include="Resources\spawn.png">
+      <Filter>Resources</Filter>
+    </Image>
+    <Image Include="Resources\spiny.png">
+      <Filter>Resources</Filter>
+    </Image>
+    <Image Include="Resources\luigi.png">
+      <Filter>Resources</Filter>
+    </Image>
+    <Image Include="Resources\mario.png">
+      <Filter>Resources</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Resources\level.txt">
+      <Filter>Resources</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

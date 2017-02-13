@@ -1,0 +1,48 @@
+NExt
+====
+-classe Turtle : Ennemy
+-start with one turtle in collection Ennemies
+-collision management with Mario
+-méca gd mario/pti mario/ dead mario? ou spawn taille unique avec barre énergie?
+
+Bug Fixture
+============
+-paramètre saut à régler pour ressembler à ceux de mario
+-dérapage lors des demi tours
+-run and jump : due to new code?
+
+
+======================================================================================
+
+mario:
+-loadResources(renderTarget,wicFactory)   //factoriser avec ennemies--same code
+***********************************
+-updateMovement(dt)                       //different de character mais existe
+-collisionTest(map)                       //neant--pas sur que existe
+-updateCurrentTile(dt)                    //different de character mais existe
+***********************************
+-render                                   //factoriser avec ennemies--same code
+
+
+
+                                  Characters
+                                      || 
+                        ==============================
+                        ||                          ||
+                        ||                          ||
+                      Players                    Ennemies
+                        ||                          ||
+                    ==========             ===================
+                    ||      ||             ||       ||       ||
+                    ||      ||             ||       ||       ||
+                  Spawn     ??            Turtle    ??       ??
+
+
+
+sound
+collision map pipes
+fast spiny
+turtle
+running and jumping bug
+smaller when jumped on
+bug wrapping collision
