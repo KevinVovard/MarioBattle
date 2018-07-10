@@ -5,7 +5,7 @@ class InputDevice
 {
 public:
 	InputDevice();
-	~InputDevice();
+	virtual ~InputDevice();
 
 	virtual bool IsSelected(PlayerAction playerAction) = 0;
 };

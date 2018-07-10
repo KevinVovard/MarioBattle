@@ -13,3 +13,4 @@ Debug
 ipch
 
 *.opensdf
+*.VC.db

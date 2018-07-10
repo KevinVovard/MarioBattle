@@ -20,7 +20,7 @@ public:
 	XINPUT_STATE GetCurrentGamepadState();
 	
 	// Get the index of the Gamepad connected [1-4]
-	int GetGamepadIndex();
+	int GetGamepadIndex() const;
 
 	// Is the Gamepad connected
 	bool IsConnected();

@@ -13,7 +13,7 @@ m_playerCollection()
 {
 	// We need to create and add the characters before to create the device resources using CreateDeviceResources
 	
-	// TODO : get playing players from selection menu where connected controllers are connected (like in Broforce)
+	// TODO : get playing players from selection menu where connected controllers are connected (like in Broforce)	
 	// Adding player 1
 	this->AddPlayer(new Spawn(new Keyboard()));
 
@@ -30,6 +30,10 @@ m_playerCollection()
 
 GameManager::~GameManager()
 {
+	for each (Character* character in m_characterCollection)
+	{
+		delete character;
+	}
 }
 
 // Load the resources for the Direct X environment

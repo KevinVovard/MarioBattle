@@ -4,7 +4,8 @@
 
 #define CACHE_SIZE 5000
 
-MapManager::MapManager(void) :m_map(NULL)
+// nullptr is equivalent to NULL, NULL is the macro while nullptr is a C++11 keyword
+MapManager::MapManager(void) :m_map(nullptr)
 {
 }
 
@@ -19,6 +20,8 @@ HRESULT MapManager::LoadMap(const char* level, ID2D1RenderTarget *pRendertarget,
 		exit(-1);
 	}
 
+	// we need to delete the m_map allocated memory if it is already allocated
+	delete m_map;
 	m_map = new Map;
 	HRESULT hr = LoadMap_tileset(file, pRendertarget, pIWICFactory);
 	if SUCCEEDED(hr)
@@ -125,10 +128,10 @@ void MapManager::LoadMap_level(FILE* F, Map* m_map, ID2D1RenderTarget *pRenderta
 	fscanf(F, "%s", buf); // #level
 	fscanf(F, "%d %d", &m_map->nbtiles_largeur_monde, &m_map->nbtiles_hauteur_monde);
 
-	m_map->schema = new unsigned short*[m_map->nbtiles_largeur_monde];
+	m_map->schema = new WORD*[m_map->nbtiles_largeur_monde];
 	for (i = 0; i < m_map->nbtiles_largeur_monde; i++)
 	{
-		m_map->schema[i] = new unsigned short[m_map->nbtiles_hauteur_monde];
+		m_map->schema[i] = new WORD[m_map->nbtiles_hauteur_monde];
 	}
 
 	for (j = 0; j < m_map->nbtiles_hauteur_monde; j++)

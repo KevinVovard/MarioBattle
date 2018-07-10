@@ -23,7 +23,7 @@ bool Keyboard::IsSelected(PlayerAction playerAction)
 			break;
 
 		case PlayerAction::Accelerate:
-			return GetAsyncKeyState(0x57) & 0x8000;
+			return GetAsyncKeyState(0x58) & 0x8000; // 'X'
 			break;
 
 		case PlayerAction::GetDown:
@@ -31,7 +31,7 @@ bool Keyboard::IsSelected(PlayerAction playerAction)
 			break;
 
 		case PlayerAction::Jump:
-			return GetAsyncKeyState(0x58) & 0x8000;
+			return GetAsyncKeyState(0x43) & 0x8000; //'C'
 			break;
 
 		default:

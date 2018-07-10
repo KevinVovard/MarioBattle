@@ -16,7 +16,7 @@ typedef struct
 	int nbtilesX,nbtilesY;
 	ID2D1Bitmap* tileset;
 	TileProp* props;
-	(unsigned short)** schema;
+	WORD** schema;
 	int nbtiles_largeur_monde,nbtiles_hauteur_monde;
 } Map;
 

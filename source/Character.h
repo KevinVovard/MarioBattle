@@ -74,7 +74,8 @@ public:
 	// Get the tile height
 	int GetTileHeight();
 
-	~Character(void);
+	// If we have virtual methods it means we are going to use pointer polymorphism, thereore the destructor should be virtual; It is a best practice.
+	virtual ~Character(void);
 
 	protected:
 	int nextWalkingTile(float dt,float threshold);

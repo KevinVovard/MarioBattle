@@ -40,7 +40,7 @@ XINPUT_STATE Gamepad::GetCurrentGamepadState()
 }
 
 // Get the index of the Gamepad connected [1-4]
-int Gamepad::GetGamepadIndex()
+int Gamepad::GetGamepadIndex() const
 {
 	return m_gamepadIndex;
 }

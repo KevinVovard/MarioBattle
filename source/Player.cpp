@@ -1,13 +1,13 @@
 #include "Player.h"
 #include "Spiny.h"
 
-Player::Player(InputDevice* inputDevice)
+Player::Player(InputDevice* inputDevice) : m_inputDevice(inputDevice)
 {
-	m_inputDevice = inputDevice;
 }
 
 Player::~Player(void)
 {
+	delete m_inputDevice;
 }
 
 void Player::ProcessInput(float dt)

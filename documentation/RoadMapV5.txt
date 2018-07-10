@@ -1,4 +1,4 @@
-NExt
+Next
 ====
 -classe Turtle : Ennemy
 -start with one turtle in collection Ennemies
@@ -11,7 +11,15 @@ Bug Fixture
 -dérapage lors des demi tours
 -run and jump : due to new code?
 
+Refactoring:
+============
+-Resource acquisition is initialization principle: all resources should be acquired in the constructor and released in the destructor. Example => GameManager should create/allocate the map in the constructor and release it in the destructor instead of having LoadResource/ReleaseResource methods.
 
+-dont use "using namespace" or simple "using" in header file
+
+-with a good design the new keyword should almost never be used except when it is the only solution, typically when you need sonething to live longer than a function or method
+
+-use shared_ptr instead of regular pointers
 ======================================================================================
 
 mario:
