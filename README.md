@@ -1,3 +1,5 @@
 # MarioBattle
 
-A personal implementation a the super mario bros 3 battle mode.
+A personal implementation of the battle game of Super Mario Bros. 3 All-Stars version.
+
+![alt text](screenshots/screenshot1.png "Battle Mode")
