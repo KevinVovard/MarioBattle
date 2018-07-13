@@ -99,7 +99,7 @@ HRESULT DemoApp::Initialize()
         // Create the window.
         m_hwnd = CreateWindow(
             L"D2DDemoApp",
-            L"Direct2D Demo App",
+            L"Mario Battle",
             WS_OVERLAPPEDWINDOW,
             CW_USEDEFAULT,
             CW_USEDEFAULT,
@@ -113,7 +113,7 @@ HRESULT DemoApp::Initialize()
         hr = m_hwnd ? S_OK : E_FAIL;
         if (SUCCEEDED(hr))
         {
-            ShowWindow(m_hwnd, SW_SHOWNORMAL);
+            ShowWindow(m_hwnd, SW_NORMAL); // SW_MAXIMIZE for fullscreen
             UpdateWindow(m_hwnd);
         }
     }

@@ -11,6 +11,9 @@ GameManager::GameManager():
 m_characterCollection(),
 m_playerCollection()
 {
+	m_soundManager = new SoundManager();
+	m_soundManager->InitializeResources();
+
 	// We need to create and add the characters before to create the device resources using CreateDeviceResources
 	
 	// TODO : get playing players from selection menu where connected controllers are connected (like in Broforce)	
@@ -25,15 +28,16 @@ m_playerCollection()
 
 	// Adding player 4
 	this->AddPlayer(new Spawn(new Gamepad(3)));
+
+	for each (Player* player in m_playerCollection)
+	{
+		m_soundManager->AddSoundBufferForEntity(player->GetObjectId());
+	}
 }
 
 
 GameManager::~GameManager()
 {
-	for each (Character* character in m_characterCollection)
-	{
-		delete character;
-	}
 }
 
 // Load the resources for the Direct X environment
@@ -62,6 +66,7 @@ void GameManager::InitializeScene(int screenWidth, int screenheight)
 {
 	// Resize the scene
 	this->ResizeScene(screenWidth, screenheight);
+	m_soundManager->PlayMusic(MusicEffect::MusicEffect_BattleMode);
 }
 
 // Update the scene logic based on time
@@ -69,6 +74,8 @@ void GameManager::UpdateScene(float dt)
 {
 	for (int i = 0; i < m_characterCollection.size(); i++)
 	{
+		m_characterCollection.at(i)->ReInitState();
+
 		// Process input (from input device or IA)
 		m_characterCollection.at(i)->ProcessInput(dt);
 
@@ -83,6 +90,9 @@ void GameManager::UpdateScene(float dt)
 
 		// Update the current tile used for display based on the time
 		m_characterCollection.at(i)->UpdateTile(dt);
+
+		CharacterState characterState = m_characterCollection.at(i)->GetState();
+		m_soundManager->PlaySoundEffect(m_characterCollection.at(i)->GetObjectId(), GetSoundEffectForCharacterState(characterState));
 	}
 
 	// TODO: Generate enemies using AddEnemy(....) function which will use m_characterCollection.push_back(new Spiny());
@@ -187,6 +197,22 @@ void GameManager::AddEnemy()
 	}
 	
 	m_characterCollection.push_back(spiny);
+	m_soundManager->AddSoundBufferForEntity(spiny->GetObjectId());
+}
+
+SoundEffect GameManager::GetSoundEffectForCharacterState(CharacterState characterState)
+{
+	switch (characterState)
+	{
+	case CharacterState::CharacterState_StartJumping:
+		return SoundEffect::SoundEffect_Jump;
+	
+	case CharacterState::CharacterState_IsJumpedOn:
+		return SoundEffect::SoundEffect_StandardCharacterCollision;
+
+	default:
+		return SoundEffect::SoundEffect_NoSoundEffect;
+	}
 }
 
 // Release the resources when the application is closed.
@@ -194,5 +220,15 @@ int GameManager::ReleaseResources()
 {
 	// Release the map
 	mapManager.ReleaseMap();
+
+	m_soundManager->ReleaseResources();
+	delete m_soundManager;
+
+	// Release characters' (and players') resources (later enemies will need to be released as soon as they are removed from the game)
+	for each (Character* character in m_characterCollection)
+	{
+		delete character;
+	}
+
 	return 0;
 }

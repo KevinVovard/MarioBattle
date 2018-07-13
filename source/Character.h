@@ -34,13 +34,25 @@ The character logic loop is:
 */
 
 // Way toward which the character is oriented
-enum Orientation {Left, Right};
+enum Orientation 
+{
+	Left, 
+	Right
+};
+
+enum CharacterState
+{
+	CharacterState_StartJumping,
+	CharacterState_IsJumpedOn,
+	CharacterState_Idle,
+	CharacterState_NoState
+};
 
 class Character
 {
 public:
 	Character(void);
-	
+
 	//loadResources only opens the tileset form the PNG file in a bitmap format
 	HRESULT LoadResources(ID2D1RenderTarget *pRendertarget,IWICImagingFactory *pIWICFactory);
 		
@@ -74,6 +86,13 @@ public:
 	// Get the tile height
 	int GetTileHeight();
 
+	// Get the unique id number for the element
+	long GetObjectId() const { return m_objectId; }
+
+	virtual CharacterState GetState() const { return m_characterState; }
+
+	void ReInitState() { m_characterState = CharacterState_NoState; }
+
 	// If we have virtual methods it means we are going to use pointer polymorphism, thereore the destructor should be virtual; It is a best practice.
 	virtual ~Character(void);
 
@@ -106,5 +125,8 @@ public:
 	bool m_isDown;
 	bool m_isRunning;
 	bool m_isWalking;
+	long m_objectId;
+	static long s_objectIdGenerator;
+	CharacterState m_characterState;
 };
 

@@ -3,6 +3,9 @@
 #include <cmath>
 #include <iostream>
 
+// Initialization of the generator
+long Character::s_objectIdGenerator = 1;
+
 Character::Character(): 
 m_heightTileReduced(21), 
 speedX(0), 
@@ -23,8 +26,11 @@ m_isRunning(false),
 m_isWalking(false), 
 m_walkingCount(0), 
 m_elapsedTimeWalkingCount(0),
-m_numberCasesScan(3)
+m_numberCasesScan(3),
+m_characterState(CharacterState_Idle)
 {
+	// currently the character instances are created sequentially, lock if it is not the case anymore
+	m_objectId = s_objectIdGenerator++;
 }
 
 //loadResources only opens the tileset form the PNG file in a bitmap format

@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "GameManager.h"
+#include "SoundManager.h"
 #include <vector>
 
 class GameManager
@@ -34,9 +35,14 @@ public:
 	// Adding an enemy to the current game
 	void AddEnemy();
 
+	SoundEffect GetSoundEffectForCharacterState(CharacterState characterState);
+
 private:
 	// Manage the map (background of the game)
 	MapManager mapManager;
+	
+	// Manage the music and sound effects
+	SoundManager* m_soundManager;
 
 	// Collection of characters (moving elements)
 	std::vector<Character*> m_characterCollection;

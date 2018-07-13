@@ -87,6 +87,7 @@ void Player::ProcessInput(float dt)
 			wasHeld = true;
 			countJump = 0;
 			m_isJumping = true;
+			m_characterState = CharacterState_StartJumping;
 		}
 
 		//algo multiple jump
@@ -213,6 +214,7 @@ void Player::SetIsJumpedOn(bool isJumpedOn)
 	if (isJumpedOn)
 	{
 		this->speedX /= 2.0;
+		this->m_characterState = CharacterState_IsJumpedOn;
 	}	
 }
 
