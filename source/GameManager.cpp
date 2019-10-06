@@ -18,16 +18,16 @@ m_playerCollection()
 	
 	// TODO : get playing players from selection menu where connected controllers are connected (like in Broforce)	
 	// Adding player 1
-	this->AddPlayer(new Spawn(new Keyboard()));
+	this->AddPlayer(new Mario(new Keyboard()));
 
 	// Adding player 2
-	this->AddPlayer(new Mario(new Gamepad(1)));
+	//this->AddPlayer(new Mario(new Gamepad(1)));
 
 	// Adding player 3
-	this->AddPlayer(new Luigi(new Gamepad(2)));
+	// this->AddPlayer(new Luigi(new Gamepad(2)));
 
 	// Adding player 4
-	this->AddPlayer(new Spawn(new Gamepad(3)));
+	// this->AddPlayer(new Spawn(new Gamepad(3)));
 
 	for each (Player* player in m_playerCollection)
 	{

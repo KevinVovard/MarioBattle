@@ -11,6 +11,9 @@ m_hasChangedOrientationDuringTurning(false)
 	m_fileName="Resources/spiny.png";
 	m_heightTile=16;
 	m_widthTile=16;
+	//// get value forom a config file
+	//for (int i : m_tileHeights)
+	//	m_tileHeights[i] = 16;
 	//m_x = 32;
 	//m_y = 48-m_heightTile;
 	speedX = 1;

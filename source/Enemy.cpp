@@ -2,6 +2,11 @@
 
 Enemy::Enemy(void)
 {
+	//// get value forom a config file
+	//for (int i = 0; i < 20 ; i ++)
+	//	m_tileHeights[i] = 16;
+	////m_heightTile=16;
+	//m_widthTile = 16;
 }
 
 Enemy::~Enemy(void)
@@ -29,13 +34,13 @@ void Enemy::VerifyMapCollision(Map* map)
 
 	//maxGridY is equal to the top of the character tile
 	//we make a conditional test for the case where the character is exactly aligned with the grid or not
-	if ((int)(m_y + m_heightTile) % map->HAUTEUR_TILE == 0)
+	if ((int)(m_y + this->GetTileHeight()) % map->HAUTEUR_TILE == 0)
 	{
-		maxGridY = (m_y + m_heightTile) / map->HAUTEUR_TILE;
+		maxGridY = (m_y + this->GetTileHeight()) / map->HAUTEUR_TILE;
 	}
 	else
 	{
-		maxGridY = ((m_y + m_heightTile) / map->HAUTEUR_TILE) + 1;
+		maxGridY = ((m_y + this->GetTileHeight()) / map->HAUTEUR_TILE) + 1;
 	}
 
 	for (int a = minGridY; a < maxGridY; a++)

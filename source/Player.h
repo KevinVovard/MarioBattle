@@ -28,6 +28,8 @@ public:
 
 	void SetIsPushed(bool isPushed);
 
+	//void SetIsBig(bool isBig);
+
 protected:
 	InputDevice* m_inputDevice;
 	double m_lastSpeedX;
@@ -37,5 +39,10 @@ protected:
 	int m_isJumpedOnFrameCount = 0;
 	bool m_isPushed = false;
 	int m_isPushedFrameCount = 0;
+	//bool m_isInjured = false;
+	//int m_isInjuredFrameCount = 0;
+	//bool m_isKilled = false;
+	//int m_isKilledFrameCount = 0;
+	//bool m_isBig = true;
 };
 

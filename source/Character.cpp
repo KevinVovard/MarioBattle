@@ -17,8 +17,11 @@ factorAcceleration(0.1),
 acceleY(10), 
 countJump(0), 
 wasHeld(false), 
-m_lineTiles(1), 
-m_lastLineTiles(1),
+//m_baseLineTiles(0),
+//m_lineTiles(1), 
+//m_lastLineTiles(1),
+m_isOrientedTowardsLeft(false),
+m_wasOrientedTowardsLeft(false),
 m_currentTile(0), 
 m_isJumping(false), 
 m_isDown(false), 
@@ -48,12 +51,15 @@ void Character::VerifyMapCollision(Map* map)
 {
 	//if the character is down, we change m_heightTile to the reduced height value
 	int oldHeightTile = 0;
+	
+	//TODO: remove once adaptive height work is done
 	if (m_isDown)
 	{
 		m_y += (m_heightTile-m_heightTileReduced);
 		oldHeightTile = m_heightTile;
 		m_heightTile = m_heightTileReduced;		
 	}
+
 	//start with X
 	int minGridY=0;
 	int maxGridY=0;
@@ -62,13 +68,13 @@ void Character::VerifyMapCollision(Map* map)
 
 	//maxGridY is equal to the top of the character tile
 	//we make a conditional test for the case where the character is exactly aligned with the grid or not
-	if ((int)(m_y + m_heightTile) % map->HAUTEUR_TILE == 0)
+	if ((int)(m_y + this->GetTileHeight()) % map->HAUTEUR_TILE == 0)
 	{
-		maxGridY = (m_y + m_heightTile) / map->HAUTEUR_TILE;
+		maxGridY = (m_y + this->GetTileHeight()) / map->HAUTEUR_TILE;
 	}
 	else
 	{
-		maxGridY = ((m_y+m_heightTile)/map->HAUTEUR_TILE)+1;
+		maxGridY = ((m_y+ this->GetTileHeight())/map->HAUTEUR_TILE)+1;
 	}
 
 	for (int a = minGridY ; a < maxGridY ; a++)
@@ -208,7 +214,7 @@ void Character::VerifyMapCollision(Map* map)
 
 		if (speedY > 0)
 		{
-			int c = (m_y + m_heightTile) / map->HAUTEUR_TILE;
+			int c = (m_y + this->GetTileHeight()) / map->HAUTEUR_TILE;
 
 			for (int d = c; d < map->nbtiles_hauteur_monde; d++)
 			{
@@ -216,7 +222,7 @@ void Character::VerifyMapCollision(Map* map)
 				{
 					if (d <= (map->nbtiles_hauteur_monde - 1))
 					{
-						double calcDistY = (d*map->HAUTEUR_TILE) - (m_y + m_heightTile);
+						double calcDistY = (d*map->HAUTEUR_TILE) - (m_y + this->GetTileHeight());
 						if (calcDistY < distY)
 						{
 							distY = calcDistY;
@@ -245,6 +251,7 @@ void Character::VerifyMapCollision(Map* map)
 		m_x += (map->nbtiles_largeur_monde*map->LARGEUR_TILE);
 	}
 
+	// TODO : remove once adaptive height work is done
 	//we reset m_heightTile to its old value
 	if (oldHeightTile != 0)
 	{
@@ -284,10 +291,10 @@ void Character::VerifyMovingObjectCollision(std::vector<Character*> collectionCh
 void Character::CollisionObject(Character* character)
 {
 	//TODO: Add test for X wrapping (second character box)
-	if (((this->m_x+this->m_widthTile) > character->m_x)
-		&&this->m_x < (character->m_x+character->m_widthTile)
-		&&((this->m_y+this->m_heightTile)>character->m_y)
-		&&(this->m_y<(character->m_y+character->m_heightTile)))
+	if (((this->m_x+this->GetTileWidth()) > character->m_x)
+		&&this->m_x < (character->m_x+character->GetTileWidth())
+		&&((this->m_y+this->GetTileHeight())>character->m_y)
+		&&(this->m_y<(character->m_y+character->GetTileHeight())))
 	{
 		this->CollisionEffect(character);
 	}
@@ -296,61 +303,110 @@ void Character::CollisionObject(Character* character)
 //specify the source image in the tileset, the source destination on the scene (with positions of the movement logic) and the splitting of the picture
 void Character::Render(ID2D1RenderTarget* m_pRenderTarget, float scalingFactor, int sceneOffsetWidth, int sceneOffsetHeight, Map* map)
 {
+	// If the speed is superior to zero we show the characters oriented toward the right side
+	if (speedX > 0)
+	{
+		m_isOrientedTowardsLeft = false;
+		//m_lineTiles = m_baseLineTiles + 1;
+	}
+	// if the speed is inferior to zero we show them oriented toward the left side
+	else if (speedX < 0)
+	{
+		m_isOrientedTowardsLeft = true;
+		//m_lineTiles = m_baseLineTiles + 0;
+	}
+	// else if the speed is null they stay oriented in the same direction
+	else
+	{
+		m_isOrientedTowardsLeft = m_wasOrientedTowardsLeft;
+		//m_lineTiles = m_lastLineTiles;
+	}
+
 	// Source rectangle in the character tileset
 	D2D1_RECT_F Rect_src1;
 	Rect_src1.left = (m_currentTile) * m_widthTile;
-	Rect_src1.top = m_lineTiles * m_heightTile;
+	//Rect_src1.top = m_lineTiles * m_heightTile;
+	Rect_src1.top = 0;
 	Rect_src1.right = (m_currentTile + 1) * m_widthTile;
-	Rect_src1.bottom = m_heightTile * (1 + m_lineTiles);
+	//Rect_src1.bottom = m_heightTile * (1 + m_lineTiles);
+	Rect_src1.bottom = GetTileHeight();
 
 	// Destination rectangle on the screen
 	D2D1_RECT_F Rect_dest1;
 	Rect_dest1.left = (int)((m_x * scalingFactor) + sceneOffsetWidth);
 	Rect_dest1.top = (int)((m_y * scalingFactor) + sceneOffsetHeight);
 	Rect_dest1.right = (int)(((m_x + m_widthTile) * scalingFactor) + sceneOffsetWidth);
-	Rect_dest1.bottom = (int)(((m_y + m_heightTile)* scalingFactor) + sceneOffsetHeight);
+	Rect_dest1.bottom = (int)(((m_y + GetTileHeight())* scalingFactor) + sceneOffsetHeight);
 
-	// If the speed is superior to zero we show the characters oriented toward the right side
-	if (speedX > 0)
-	{
-		m_lineTiles = 1;
-	}
-	// if the speed is inferior to zero we show them oriented toward the left side
-	else if (speedX<0)
-	{
-		m_lineTiles = 0;
-	}
-	// else if the speed is null they stay oriented in the same direction
-	else
-	{
-		m_lineTiles = m_lastLineTiles;
-	}
-
+	D2D1_RECT_F Rect_src2;
+	D2D1_RECT_F Rect_dest2;
+	bool isSplitted = false;
 	// If the character reach the start or end of the screen there is a looping dipsay effect for showing the other half on the other side of the screen
 	if (m_x + m_widthTile>(map->nbtiles_largeur_monde * map->LARGEUR_TILE))
 	{
+		isSplitted = true;
+
 		Rect_dest1.right = ((map->nbtiles_largeur_monde * map->LARGEUR_TILE) * scalingFactor) + sceneOffsetWidth;
 		Rect_src1.right = (m_currentTile + 1) * m_widthTile - ((m_x + m_widthTile) - map->nbtiles_largeur_monde * map->LARGEUR_TILE);
 
-		D2D1_RECT_F Rect_src2;
+		//D2D1_RECT_F Rect_src2;
 		Rect_src2.left = Rect_src1.right;
 		Rect_src2.top = Rect_src1.top;
 		Rect_src2.right = (m_currentTile + 1) * m_widthTile;
 		Rect_src2.bottom = Rect_src1.bottom;
 
-		D2D1_RECT_F Rect_dest2;
+		//D2D1_RECT_F Rect_dest2;
 		Rect_dest2.left = (int)(sceneOffsetWidth);
 		Rect_dest2.top = (int)((m_y * scalingFactor) + sceneOffsetHeight);
 		Rect_dest2.right = (int)((((m_x + m_widthTile) - map->nbtiles_largeur_monde * map->LARGEUR_TILE) * scalingFactor) + sceneOffsetWidth);
-		Rect_dest2.bottom = (int)(((m_y + m_heightTile) * scalingFactor) + sceneOffsetHeight);
-
-		m_pRenderTarget->DrawBitmap(m_tileset, Rect_dest2, 1.0f, D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR, Rect_src2);
+		Rect_dest2.bottom = (int)(((m_y + GetTileHeight()) * scalingFactor) + sceneOffsetHeight);
 	}
 
+	if (isSplitted && !m_isOrientedTowardsLeft)
+	{
+		const FLOAT newRectSrc2Left = Rect_src1.left;
+		const FLOAT newRectSrc2Right = Rect_src1.left + (Rect_src2.right - Rect_src2.left);
+
+		const FLOAT newRectSrc1Left = newRectSrc2Right;
+		const FLOAT newRectSrc1Right = Rect_src2.right;
+
+		Rect_src1.left = newRectSrc1Left;
+		Rect_src1.right = newRectSrc1Right;
+
+		Rect_src2.left = newRectSrc2Left;
+		Rect_src2.right = newRectSrc2Right;
+	}
+
+	// Display rect 1
+	if (!m_isOrientedTowardsLeft)
+	{
+		D2D1_POINT_2F center = D2D1::Point2F(Rect_dest1.left + (int)((Rect_dest1.right - Rect_dest1.left) / 2.0f), 0);
+		m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Scale(-1, 1, center));
+	}
+	
 	m_pRenderTarget->DrawBitmap(m_tileset, Rect_dest1, 1.0f, D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR, Rect_src1);
+	
+	if (!m_isOrientedTowardsLeft)
+		m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity()); // put back regular transform
+
+	if (isSplitted)
+	{
+		// Display rect 2
+		if (!m_isOrientedTowardsLeft)
+		{
+			const D2D1_POINT_2F center = D2D1::Point2F(Rect_dest2.left + (int)((Rect_dest2.right - Rect_dest2.left) / 2.0f), 0.0f);
+			m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Scale(-1, 1, center));
+		}
+
+		m_pRenderTarget->DrawBitmap(m_tileset, Rect_dest2, 1.0f, D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR, Rect_src2);
+
+		if (!m_isOrientedTowardsLeft)
+			m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
+	}
 
 	// Records current orientation
-	m_lastLineTiles = m_lineTiles;
+	//m_lastLineTiles = m_lineTiles;
+	m_wasOrientedTowardsLeft = m_isOrientedTowardsLeft;
 }
 
 // Set the x, y position and the orientation of the character
@@ -359,8 +415,13 @@ void Character::SetPositionAndOrientation(int x, int y, Orientation orientation)
 	m_x = x;
 	m_y = y;
 	// The resource line used defines the orientation
-	m_lineTiles = orientation == Orientation::Left ? 0 : 1;
-	m_lastLineTiles = m_lineTiles;
+	//m_lineTiles = orientation == Orientation::Left ? 0 : 1;
+	//m_lastLineTiles = m_lineTiles;
+	
+	//m_wasOrientedTowardsLeft == Orientation::Left ? true : false;
+
+	m_isOrientedTowardsLeft = orientation == Orientation::Left;
+	m_wasOrientedTowardsLeft = m_isOrientedTowardsLeft;
 }
 
 // Get the tile width
@@ -373,6 +434,7 @@ int Character::GetTileWidth()
 int Character::GetTileHeight()
 {
 	return m_heightTile;
+	//return m_tileHeights[m_currentTile];
 }
 
 Character::~Character(void)

@@ -3,6 +3,10 @@
 
 Player::Player(InputDevice* inputDevice) : m_inputDevice(inputDevice)
 {
+	// TODO: array too for adaptive width?
+	//m_widthTile = 16;
+
+
 }
 
 Player::~Player(void)
@@ -147,6 +151,19 @@ void Player::UpdateTile(float dt)
 			m_isJumpedOnFrameCount = 0;
 		}
 	}
+	//else if (m_isInjured)
+	//{
+	//	this->m_isInjuredFrameCount++;
+	//	if(m_isInjuredFrameCount > 30)
+	//	{
+	//		m_isInjured = false;
+	//		m_isInjuredFrameCount = 0;
+	//	}
+	//}
+	//else if (m_isKilled)
+	//{
+
+	//}
 	else if (m_isPushed)
 	{
 		m_currentTile = 4;
@@ -165,11 +182,25 @@ void Player::UpdateTile(float dt)
 
 void Player::CollisionEffect(Character* character)
 {
+	// temporarily untouchable after injury
+	//if (m_isInjured)
+	//	return;
+
 	Spiny* spiny = dynamic_cast<Spiny*>(character);
 	if (spiny != NULL)
 	{
-		this->m_y = 0;
-		this->m_x = 200;
+		//if (m_isBig)
+		//{
+		//	m_isInjured = true;
+		//	this->SetIsBig(false);
+		//}
+		//else
+		//{
+		//	// dying animation
+		//	this->SetIsBig(true);
+			this->m_y = 0;
+			this->m_x = 200;
+		//}
 	}
 
 	Player* player = dynamic_cast<Player*>(character);
@@ -193,7 +224,7 @@ void Player::CollisionEffect(Character* character)
 		playerAbove = this->m_y <= player->m_y ? this : player;
 		playerBelow = this->m_y <= player->m_y ? player : this;
 
-		if (0.95 * (playerAbove->m_y + m_heightTile)<playerBelow->m_y)
+		if (0.95 * (playerAbove->m_y + this->GetTileHeight())<playerBelow->m_y)
 			{
 				//TODO: replace by IsJumping?
 				playerAbove->speedY = -2.0;
@@ -222,6 +253,14 @@ void Player::SetIsPushed(bool isPushed)
 {
 	this->m_isPushed = true;
 }
+
+//void Player::SetIsBig(bool isBig)
+//{
+//	this->m_isBig = isBig;
+//	//m_tileOffsetFactor = 10;
+//	//m_baseLineTiles = m_isBig ? 0 : 2;
+//	//m_heightTile = m_isBig ? 28 : 16;
+//}
 
 void Player::SetIsJumping(bool isJumping)
 {
