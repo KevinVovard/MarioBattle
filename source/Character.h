@@ -98,9 +98,17 @@ public:
 
 	protected:
 	int nextWalkingTile(float dt,float threshold);
+	void SetCurrentTile(int previousSelectedTile, int selectedTile);
 
 	ID2D1Bitmap* m_tileset;
 	double factorAcceleration;
+	// (0,0)
+	// +------> 
+	// |      X
+	// |
+	// V Y
+	// 
+	// m_x, m_y => character position corresponding to the top left corner of its position
 	double m_x;
 	double m_y;
 	double speedX;
@@ -118,9 +126,9 @@ public:
 	bool m_wasOrientedTowardsLeft;
 	int countJump;
 	int m_widthTile;
-	int m_heightTile;
-	int m_heightTileReduced;
-	//int m_tileHeights[20];
+	int m_baselineTileHeight;
+	//int m_heightTileReduced;
+	int m_tileHeights[20];
 	//int m_tileOffsetFactor;
 	int m_currentTile;
 	int m_walkingCount;

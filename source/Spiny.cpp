@@ -9,11 +9,12 @@ m_elapsedTimeTurningCount(0),
 m_hasChangedOrientationDuringTurning(false)
 {
 	m_fileName="Resources/spiny.png";
-	m_heightTile=16;
-	m_widthTile=16;
+	m_baselineTileHeight=16;
+    m_widthTile=16;
 	//// get value forom a config file
-	//for (int i : m_tileHeights)
-	//	m_tileHeights[i] = 16;
+	for (int i = 0 ; i < 20; i++)
+		m_tileHeights[i] = 16;
+
 	//m_x = 32;
 	//m_y = 48-m_heightTile;
 	speedX = 1;
@@ -53,15 +54,15 @@ void Spiny::UpdateTile(float dt)
 {
 	if (m_isFalling)
 	{
-		m_currentTile = 2;
+		this->SetCurrentTile(m_currentTile, 2);
 	}
 	else if (m_isTurning)
 	{
-		m_currentTile = nextTurningTile(dt);
+		this->SetCurrentTile(m_currentTile, nextTurningTile(dt));
 	}
 	else if (m_isWalking)
 	{
-		m_currentTile = nextWalkingTile(dt, 0.15);
+		this->SetCurrentTile(m_currentTile, nextWalkingTile(dt, 0.15));
 	}
 }
 

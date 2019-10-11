@@ -123,27 +123,27 @@ void Player::UpdateTile(float dt)
 {
 	if (m_isJumping && m_isDown)
 	{
-		m_currentTile = 5;
+		this->SetCurrentTile(m_currentTile, 5);
 	}
 	else if (m_isJumping) 
 	{ 
-		m_currentTile = 3; 
+		this->SetCurrentTile(m_currentTile, 3);
 	}
 	else if (m_isDown)
 	{
-		m_currentTile = 5;
+		this->SetCurrentTile(m_currentTile, 5);
 	}
 	else if (m_isRunning)
 	{
-		m_currentTile = nextWalkingTile(dt, 0.05);
+		this->SetCurrentTile(m_currentTile, nextWalkingTile(dt, 0.05));
 	}
 	else if (m_isWalking)
 	{
-		m_currentTile = nextWalkingTile(dt, 0.1);
+		this->SetCurrentTile(m_currentTile, nextWalkingTile(dt, 0.1));
 	}
 	else if (m_isJumpedOn)
 	{
-		m_currentTile = 7;
+		this->SetCurrentTile(m_currentTile, 7);
 		this->m_isJumpedOnFrameCount++;
 		if (m_isJumpedOnFrameCount > 15)
 		{
@@ -166,7 +166,7 @@ void Player::UpdateTile(float dt)
 	//}
 	else if (m_isPushed)
 	{
-		m_currentTile = 4;
+		this->SetCurrentTile(m_currentTile, 4);
 		this->m_isPushedFrameCount++;
 		if (m_isPushedFrameCount > 10)
 		{
@@ -176,7 +176,7 @@ void Player::UpdateTile(float dt)
 	}
 	else
 	{
-		m_currentTile = 0;
+		this->SetCurrentTile(m_currentTile, 0);
 	}
 }
 

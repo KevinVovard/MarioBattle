@@ -7,7 +7,7 @@
 long Character::s_objectIdGenerator = 1;
 
 Character::Character(): 
-m_heightTileReduced(21), 
+//m_heightTileReduced(21), 
 speedX(0), 
 speedY(0),
 targetSpeedX(0), 
@@ -50,15 +50,15 @@ HRESULT Character::LoadResources(ID2D1RenderTarget *pRendertarget,IWICImagingFac
 void Character::VerifyMapCollision(Map* map)
 {
 	//if the character is down, we change m_heightTile to the reduced height value
-	int oldHeightTile = 0;
+	//int oldHeightTile = 0;
 	
 	//TODO: remove once adaptive height work is done
-	if (m_isDown)
-	{
-		m_y += (m_heightTile-m_heightTileReduced);
-		oldHeightTile = m_heightTile;
-		m_heightTile = m_heightTileReduced;		
-	}
+	//if (m_isDown)
+	//{
+	//	m_y += (m_heightTile-m_heightTileReduced);
+	//	oldHeightTile = m_heightTile;
+	//	m_heightTile = m_heightTileReduced;		
+	//}
 
 	//start with X
 	int minGridY=0;
@@ -253,11 +253,11 @@ void Character::VerifyMapCollision(Map* map)
 
 	// TODO : remove once adaptive height work is done
 	//we reset m_heightTile to its old value
-	if (oldHeightTile != 0)
-	{
-		m_heightTile = oldHeightTile;
-		m_y -= (m_heightTile - m_heightTileReduced);
-	}
+	//if (oldHeightTile != 0)
+	//{
+	//	m_heightTile = oldHeightTile;
+	//	m_y -= (m_heightTile - m_heightTileReduced);
+	//}
 }
 
 void Character::UpdatePosition()
@@ -270,10 +270,18 @@ int Character::nextWalkingTile(float dt, float threshold)
 	if (m_elapsedTimeWalkingCount > threshold)
 	{
 		m_walkingCount++;
-		m_walkingCount %= 2;
+		m_walkingCount %= 3;
 		m_elapsedTimeWalkingCount = 0;
 	}
-	return (m_walkingCount + 1);
+	return (m_walkingCount);
+}
+
+void Character::SetCurrentTile(int previousSelectedTile, int selectedTile)
+{
+	const int previousTileHeight = m_tileHeights[previousSelectedTile];
+	const int selectedHeightTile = m_tileHeights[selectedTile];
+	m_y = m_y + previousTileHeight - selectedHeightTile;
+	m_currentTile = selectedTile;
 }
 
 //Verify if the character collides with any moving objects
@@ -326,10 +334,10 @@ void Character::Render(ID2D1RenderTarget* m_pRenderTarget, float scalingFactor, 
 	D2D1_RECT_F Rect_src1;
 	Rect_src1.left = (m_currentTile) * m_widthTile;
 	//Rect_src1.top = m_lineTiles * m_heightTile;
-	Rect_src1.top = 0;
+	Rect_src1.top = m_baselineTileHeight - GetTileHeight();
 	Rect_src1.right = (m_currentTile + 1) * m_widthTile;
 	//Rect_src1.bottom = m_heightTile * (1 + m_lineTiles);
-	Rect_src1.bottom = GetTileHeight();
+	Rect_src1.bottom = m_baselineTileHeight;
 
 	// Destination rectangle on the screen
 	D2D1_RECT_F Rect_dest1;
@@ -433,8 +441,8 @@ int Character::GetTileWidth()
 // Get the tile heigth
 int Character::GetTileHeight()
 {
-	return m_heightTile;
-	//return m_tileHeights[m_currentTile];
+	//return m_heightTile;
+	return m_tileHeights[m_currentTile];
 }
 
 Character::~Character(void)
