@@ -119,15 +119,11 @@ public:
 	double maxSuperSpeed;
 	const char* m_fileName;
 	bool wasHeld;
-	//int m_baseLineTiles;
-	//int m_lineTiles;
-	//int m_lastLineTiles;
 	bool m_isOrientedTowardsLeft;
 	bool m_wasOrientedTowardsLeft;
 	int countJump;
 	int m_widthTile;
 	int m_baselineTileHeight;
-	//int m_heightTileReduced;
 	int m_tileHeights[20];
 	//int m_tileOffsetFactor;
 	int m_currentTile;

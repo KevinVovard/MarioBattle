@@ -3,10 +3,6 @@
 
 Player::Player(InputDevice* inputDevice) : m_inputDevice(inputDevice)
 {
-	// TODO: array too for adaptive width?
-	//m_widthTile = 16;
-
-
 }
 
 Player::~Player(void)
@@ -16,10 +12,10 @@ Player::~Player(void)
 
 void Player::ProcessInput(float dt)
 {
-	//bouton de deplacement vers la gauche enfoncé
+	// Left arrow button pressed
 	if (m_inputDevice->IsSelected(PlayerAction::MoveToTheLeft))
 	{
-		//bouton d'acceleration enfoncé
+		// Speed button pressed
 		if (m_inputDevice->IsSelected(PlayerAction::Accelerate))
 		{
 			targetSpeedX = -maxSuperSpeed;
@@ -28,16 +24,16 @@ void Player::ProcessInput(float dt)
 		}
 		else
 		{
-			//vitesse normal
+			// regular speed
 			targetSpeedX = -maxSpeed;
 			m_isWalking = true;
 			m_isRunning = false;
 		}
 	}
-	//bouton de déplacement vers la droite enfoncé
+	// right arrow button pressed
 	else if (m_inputDevice->IsSelected(PlayerAction::MoveToTheRight))
 	{
-		//bouton d'accélération enfoncé
+		// Speed button pressed
 		if (m_inputDevice->IsSelected(PlayerAction::Accelerate))
 		{
 			targetSpeedX = maxSuperSpeed;
@@ -46,7 +42,7 @@ void Player::ProcessInput(float dt)
 		}
 		else
 		{
-			//vitesse normal
+			// regular speed
 			targetSpeedX = maxSpeed;
 			m_isWalking = true;
 			m_isRunning = false;
@@ -214,6 +210,7 @@ void Player::CollisionEffect(Character* character)
 		this->speedX = (this->m_lastSpeedX * (this->m_mass - player->m_mass) + player->m_lastSpeedX * 2.0 * player->m_mass) / (player->m_mass + this->m_mass);
 		player->speedX = (this->m_lastSpeedX * 2.0 * this->m_mass + player->m_lastSpeedX * (player->m_mass - this->m_mass)) / (player->m_mass + this->m_mass);
 
+		// TODO : REMOVE?
 		//this->speedY = (this->m_lastSpeedY * (this->m_mass - player->m_mass) + player->m_lastSpeedY * 2.0 * player->m_mass) / (player->m_mass + this->m_mass);
 		//player->speedY = (this->m_lastSpeedY * 2.0 * this->m_mass + player->m_lastSpeedY * (player->m_mass - this->m_mass)) / (player->m_mass + this->m_mass);
 		

@@ -2,11 +2,6 @@
 
 Enemy::Enemy(void)
 {
-	//// get value forom a config file
-	//for (int i = 0; i < 20 ; i ++)
-	//	m_tileHeights[i] = 16;
-	////m_heightTile=16;
-	//m_widthTile = 16;
 }
 
 Enemy::~Enemy(void)

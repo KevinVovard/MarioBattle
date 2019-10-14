@@ -7,7 +7,6 @@
 long Character::s_objectIdGenerator = 1;
 
 Character::Character(): 
-//m_heightTileReduced(21), 
 speedX(0), 
 speedY(0),
 targetSpeedX(0), 
@@ -17,9 +16,6 @@ factorAcceleration(0.1),
 acceleY(10), 
 countJump(0), 
 wasHeld(false), 
-//m_baseLineTiles(0),
-//m_lineTiles(1), 
-//m_lastLineTiles(1),
 m_isOrientedTowardsLeft(false),
 m_wasOrientedTowardsLeft(false),
 m_currentTile(0), 
@@ -49,17 +45,6 @@ HRESULT Character::LoadResources(ID2D1RenderTarget *pRendertarget,IWICImagingFac
 //Verify if the character collides with the map
 void Character::VerifyMapCollision(Map* map)
 {
-	//if the character is down, we change m_heightTile to the reduced height value
-	//int oldHeightTile = 0;
-	
-	//TODO: remove once adaptive height work is done
-	//if (m_isDown)
-	//{
-	//	m_y += (m_heightTile-m_heightTileReduced);
-	//	oldHeightTile = m_heightTile;
-	//	m_heightTile = m_heightTileReduced;		
-	//}
-
 	//start with X
 	int minGridY=0;
 	int maxGridY=0;
@@ -250,14 +235,6 @@ void Character::VerifyMapCollision(Map* map)
 		//not totally accurate
 		m_x += (map->nbtiles_largeur_monde*map->LARGEUR_TILE);
 	}
-
-	// TODO : remove once adaptive height work is done
-	//we reset m_heightTile to its old value
-	//if (oldHeightTile != 0)
-	//{
-	//	m_heightTile = oldHeightTile;
-	//	m_y -= (m_heightTile - m_heightTileReduced);
-	//}
 }
 
 void Character::UpdatePosition()
@@ -299,6 +276,7 @@ void Character::VerifyMovingObjectCollision(std::vector<Character*> collectionCh
 void Character::CollisionObject(Character* character)
 {
 	//TODO: Add test for X wrapping (second character box)
+	//      USE collection of two bounding boxes
 	if (((this->m_x+this->GetTileWidth()) > character->m_x)
 		&&this->m_x < (character->m_x+character->GetTileWidth())
 		&&((this->m_y+this->GetTileHeight())>character->m_y)
@@ -311,32 +289,18 @@ void Character::CollisionObject(Character* character)
 //specify the source image in the tileset, the source destination on the scene (with positions of the movement logic) and the splitting of the picture
 void Character::Render(ID2D1RenderTarget* m_pRenderTarget, float scalingFactor, int sceneOffsetWidth, int sceneOffsetHeight, Map* map)
 {
-	// If the speed is superior to zero we show the characters oriented toward the right side
-	if (speedX > 0)
-	{
+	if (speedX > 0) // If the speed is superior to zero we show the characters oriented toward the right side
 		m_isOrientedTowardsLeft = false;
-		//m_lineTiles = m_baseLineTiles + 1;
-	}
-	// if the speed is inferior to zero we show them oriented toward the left side
-	else if (speedX < 0)
-	{
+	else if (speedX < 0) // if the speed is inferior to zero we show them oriented toward the left side
 		m_isOrientedTowardsLeft = true;
-		//m_lineTiles = m_baseLineTiles + 0;
-	}
-	// else if the speed is null they stay oriented in the same direction
-	else
-	{
+	else // else if the speed is null they stay oriented in the same direction
 		m_isOrientedTowardsLeft = m_wasOrientedTowardsLeft;
-		//m_lineTiles = m_lastLineTiles;
-	}
 
 	// Source rectangle in the character tileset
 	D2D1_RECT_F Rect_src1;
 	Rect_src1.left = (m_currentTile) * m_widthTile;
-	//Rect_src1.top = m_lineTiles * m_heightTile;
 	Rect_src1.top = m_baselineTileHeight - GetTileHeight();
 	Rect_src1.right = (m_currentTile + 1) * m_widthTile;
-	//Rect_src1.bottom = m_heightTile * (1 + m_lineTiles);
 	Rect_src1.bottom = m_baselineTileHeight;
 
 	// Destination rectangle on the screen
@@ -357,13 +321,11 @@ void Character::Render(ID2D1RenderTarget* m_pRenderTarget, float scalingFactor, 
 		Rect_dest1.right = ((map->nbtiles_largeur_monde * map->LARGEUR_TILE) * scalingFactor) + sceneOffsetWidth;
 		Rect_src1.right = (m_currentTile + 1) * m_widthTile - ((m_x + m_widthTile) - map->nbtiles_largeur_monde * map->LARGEUR_TILE);
 
-		//D2D1_RECT_F Rect_src2;
 		Rect_src2.left = Rect_src1.right;
 		Rect_src2.top = Rect_src1.top;
 		Rect_src2.right = (m_currentTile + 1) * m_widthTile;
 		Rect_src2.bottom = Rect_src1.bottom;
 
-		//D2D1_RECT_F Rect_dest2;
 		Rect_dest2.left = (int)(sceneOffsetWidth);
 		Rect_dest2.top = (int)((m_y * scalingFactor) + sceneOffsetHeight);
 		Rect_dest2.right = (int)((((m_x + m_widthTile) - map->nbtiles_largeur_monde * map->LARGEUR_TILE) * scalingFactor) + sceneOffsetWidth);
@@ -412,8 +374,7 @@ void Character::Render(ID2D1RenderTarget* m_pRenderTarget, float scalingFactor, 
 			m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
 	}
 
-	// Records current orientation
-	//m_lastLineTiles = m_lineTiles;
+	// Record current orientation
 	m_wasOrientedTowardsLeft = m_isOrientedTowardsLeft;
 }
 
@@ -422,11 +383,6 @@ void Character::SetPositionAndOrientation(int x, int y, Orientation orientation)
 {
 	m_x = x;
 	m_y = y;
-	// The resource line used defines the orientation
-	//m_lineTiles = orientation == Orientation::Left ? 0 : 1;
-	//m_lastLineTiles = m_lineTiles;
-	
-	//m_wasOrientedTowardsLeft == Orientation::Left ? true : false;
 
 	m_isOrientedTowardsLeft = orientation == Orientation::Left;
 	m_wasOrientedTowardsLeft = m_isOrientedTowardsLeft;
@@ -441,7 +397,6 @@ int Character::GetTileWidth()
 // Get the tile heigth
 int Character::GetTileHeight()
 {
-	//return m_heightTile;
 	return m_tileHeights[m_currentTile];
 }
 
