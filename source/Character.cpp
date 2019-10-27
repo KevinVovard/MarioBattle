@@ -26,7 +26,7 @@ m_isWalking(false),
 m_walkingCount(0), 
 m_elapsedTimeWalkingCount(0),
 m_numberCasesScan(3),
-m_characterState(CharacterState_Idle)
+m_characterEvent(CharacterEvent_None)
 {
 	// currently the character instances are created sequentially, lock if it is not the case anymore
 	m_objectId = s_objectIdGenerator++;
@@ -241,17 +241,6 @@ void Character::UpdatePosition()
 {
 }
 
-int Character::nextWalkingTile(float dt, float threshold)
-{
-	m_elapsedTimeWalkingCount += dt;
-	if (m_elapsedTimeWalkingCount > threshold)
-	{
-		m_walkingCount++;
-		m_walkingCount %= 3;
-		m_elapsedTimeWalkingCount = 0;
-	}
-	return (m_walkingCount);
-}
 
 void Character::SetCurrentTile(int previousSelectedTile, int selectedTile)
 {

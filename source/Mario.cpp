@@ -15,7 +15,7 @@ Mario::Mario(InputDevice* inputDevice) : Player(inputDevice)
 	m_tileHeights[7] = 19;
 	m_tileHeights[8] = 26;
 	
-	for (int i = 10; i < 20; i++)
+	for (int i = 9; i < 16; i++)
 		m_tileHeights[i] = 16;
 }
 

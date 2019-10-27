@@ -35,7 +35,10 @@ public:
 	// Adding an enemy to the current game
 	void AddEnemy();
 
-	SoundEffect GetSoundEffectForCharacterState(CharacterState characterState);
+	// Detects if the game needs to be freezed i.e. one of the characters is growing or shrinking or dying.
+	bool IsGameFreezed(std::vector<Character*> collectionCharacter);
+
+	SoundEffect GetSoundEffectForCharacterEvent(CharacterEvent characterEvent);
 
 private:
 	// Manage the map (background of the game)

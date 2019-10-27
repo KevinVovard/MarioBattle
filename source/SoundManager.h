@@ -5,6 +5,8 @@ enum SoundEffect
 {
 	SoundEffect_NoSoundEffect,
 	SoundEffect_Jump,
+	SoundEffect_PowerDown,
+	SoundEffect_PowerUp,
 	SoundEffect_StandardCharacterCollision
 };
 

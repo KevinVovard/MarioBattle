@@ -16,6 +16,8 @@ void SoundManager::InitializeResources()
 	m_musicEffectDictionnary[MusicEffect_BattleMode] = "Resources/sounds/BattleModeThemeExtended.ogg";
 
 	m_soundEffectDictionnary[SoundEffect_Jump] = "Resources/sounds/jump.wav";
+	m_soundEffectDictionnary[SoundEffect_PowerDown] = "Resources/sounds/PowerDown.wav";
+	m_soundEffectDictionnary[SoundEffect_PowerUp] = "Resources/sounds/PowerUp.wav";
 	m_soundEffectDictionnary[SoundEffect_StandardCharacterCollision] = "Resources/sounds/stomp.wav";
 }
 

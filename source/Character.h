@@ -40,12 +40,14 @@ enum Orientation
 	Right
 };
 
-enum CharacterState
+enum CharacterEvent
 {
-	CharacterState_StartJumping,
-	CharacterState_IsJumpedOn,
-	CharacterState_Idle,
-	CharacterState_NoState
+	CharacterEvent_StartJumping,
+	CharacterEvent_GotJumpedOn,
+	CharacterEvent_GotInjured,
+	CharacterEvent_StartGrowing,
+	CharacterEvent_GotKilled,
+	CharacterEvent_None
 };
 
 class Character
@@ -72,10 +74,10 @@ public:
 	virtual void CollisionEffect(Character* character) = 0;
 	
 	//select which tile to draw base on the current state, also contains logic for walking and running animation
-	virtual void UpdateTile(float dt) = 0;
+	virtual void UpdateTile(float dt, bool isGameFreezed) = 0;
 	
 	//update the movement logic of the character based on the time delta
-	virtual void ProcessInput(float dt) = 0;
+	virtual void ProcessInput(float dt, bool isGameFreezed) = 0;
 
 	// Set the x, y position and the orientation of the character
 	virtual void SetPositionAndOrientation(int x, int y, Orientation orientation);
@@ -89,15 +91,15 @@ public:
 	// Get the unique id number for the element
 	long GetObjectId() const { return m_objectId; }
 
-	virtual CharacterState GetState() const { return m_characterState; }
+	virtual CharacterEvent GetEvent() const { return m_characterEvent; }
 
-	void ReInitState() { m_characterState = CharacterState_NoState; }
+	void ResetEventing() { m_characterEvent = CharacterEvent_None; }
 
 	// If we have virtual methods it means we are going to use pointer polymorphism, thereore the destructor should be virtual; It is a best practice.
 	virtual ~Character(void);
 
 	protected:
-	int nextWalkingTile(float dt,float threshold);
+	virtual int nextWalkingTile(float dt,float threshold) = 0;
 	void SetCurrentTile(int previousSelectedTile, int selectedTile);
 
 	ID2D1Bitmap* m_tileset;
@@ -136,6 +138,6 @@ public:
 	bool m_isWalking;
 	long m_objectId;
 	static long s_objectIdGenerator;
-	CharacterState m_characterState;
+	CharacterEvent m_characterEvent;
 };
 

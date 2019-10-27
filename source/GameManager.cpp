@@ -72,27 +72,37 @@ void GameManager::InitializeScene(int screenWidth, int screenheight)
 // Update the scene logic based on time
 void GameManager::UpdateScene(float dt)
 {
+	// If one of the characters is growing or shrinking, or dying :(
+	const bool isGameFreezed = IsGameFreezed(m_characterCollection);
+
 	for (int i = 0; i < m_characterCollection.size(); i++)
 	{
-		m_characterCollection.at(i)->ReInitState();
+		m_characterCollection.at(i)->ResetEventing();
 
 		// Process input (from input device or IA)
-		m_characterCollection.at(i)->ProcessInput(dt);
+		m_characterCollection.at(i)->ProcessInput(dt, isGameFreezed);
 
-		// Verify if the character collides with any moving object
-		m_characterCollection.at(i)->VerifyMovingObjectCollision(m_characterCollection);
+		if (!isGameFreezed) // no need to test for collision when the game is freezed
+		{
+			// Verify if the character collides with any moving object
+			m_characterCollection.at(i)->VerifyMovingObjectCollision(m_characterCollection);
 
-		// Verifies if the character collides with the map
-		m_characterCollection.at(i)->VerifyMapCollision(mapManager.GetMap());
+			// Verifies if the character collides with the map
+			m_characterCollection.at(i)->VerifyMapCollision(mapManager.GetMap());
+		}
 		
 		// Update the current position
 		m_characterCollection.at(i)->UpdatePosition();
 
 		// Update the current tile used for display based on the time
-		m_characterCollection.at(i)->UpdateTile(dt);
+		m_characterCollection.at(i)->UpdateTile(dt, isGameFreezed);
 
-		CharacterState characterState = m_characterCollection.at(i)->GetState();
-		m_soundManager->PlaySoundEffect(m_characterCollection.at(i)->GetObjectId(), GetSoundEffectForCharacterState(characterState));
+		if (!isGameFreezed)
+		{
+			// Play sound effect for current event if any
+			const CharacterEvent characterEvent = m_characterCollection.at(i)->GetEvent();
+			m_soundManager->PlaySoundEffect(m_characterCollection.at(i)->GetObjectId(), GetSoundEffectForCharacterEvent(characterEvent));
+		}
 	}
 
 	// TODO: Generate enemies using AddEnemy(....) function which will use m_characterCollection.push_back(new Spiny());
@@ -134,7 +144,7 @@ void GameManager::ResizeScene(int screenWidth, int screenheight)
 // Render the scene
 void GameManager::RenderScene(ID2D1HwndRenderTarget* m_pRenderTarget)
 {
-	/* We are currently using a scaling factor but we ould render using the window size with:
+	/* We are currently using a scaling factor but we sould render using the window size with:
 	D2D1_SIZE_F rtSize = m_pRenderTarget->GetSize();
 	int width = static_cast<int>(rtSize.width);
 	int height = static_cast<int>(rtSize.height);*/
@@ -145,7 +155,7 @@ void GameManager::RenderScene(ID2D1HwndRenderTarget* m_pRenderTarget)
 	this->mapManager.RenderMap(m_pRenderTarget, m_sceneScalingFactor, m_sceneOffsetWidth, m_sceneOffsetHeight);
 
 	// render the characters
-	for (int i = 0; i < m_characterCollection.size(); i++)
+	for (int i = m_characterCollection.size() - 1; i >= 0; i--)
 	{
 		m_characterCollection.at(i)->Render(m_pRenderTarget, m_sceneScalingFactor, m_sceneOffsetWidth, m_sceneOffsetHeight, map);
 	}
@@ -200,14 +210,45 @@ void GameManager::AddEnemy()
 	m_soundManager->AddSoundBufferForEntity(spiny->GetObjectId());
 }
 
-SoundEffect GameManager::GetSoundEffectForCharacterState(CharacterState characterState)
+bool GameManager::IsGameFreezed(std::vector<Character*> collectionCharacter)
 {
-	switch (characterState)
+	for (int i = 0; i < collectionCharacter.size(); i++)
 	{
-	case CharacterState::CharacterState_StartJumping:
+		// we only check for players
+		Player* player = dynamic_cast<Player*>(collectionCharacter.at(i));
+		if (!player)
+			continue;
+
+		if (player->GetIsFreezed())
+			return true;
+		// TODO: should we create a IsFreezed (injured or growing or killed) function or should we
+		// refactor the character state logic for making it work for both the sound logic and the game logic?
+		// Currently we reset the state at each game loop for only triggering the sound logic once,
+		// but then we cannot check the state of a character to know if he is injured or dying or growing
+
+		/*CharacterState  characterState = collectionCharacter.at(i)->GetState();
+		if (characterState == CharacterState_Injured || characterState == CharacterState_Growing
+			|| characterState == CharacterState_Killed)
+			return true;*/
+	}
+
+	return false;
+}
+
+SoundEffect GameManager::GetSoundEffectForCharacterEvent(CharacterEvent characterEvent)
+{
+	switch (characterEvent)
+	{
+	case CharacterEvent::CharacterEvent_StartJumping:
 		return SoundEffect::SoundEffect_Jump;
+
+	case CharacterEvent::CharacterEvent_GotInjured:
+		return SoundEffect::SoundEffect_PowerDown;
+
+	case CharacterEvent::CharacterEvent_StartGrowing:
+		return SoundEffect::SoundEffect_PowerUp;
 	
-	case CharacterState::CharacterState_IsJumpedOn:
+	case CharacterEvent::CharacterEvent_GotJumpedOn:
 		return SoundEffect::SoundEffect_StandardCharacterCollision;
 
 	default:

@@ -5,10 +5,10 @@ class Spiny : public Enemy
 public:
 	Spiny(void);
 	~Spiny(void);
-	void ProcessInput(float dt);
-	void UpdateTile(float dt);
+	void ProcessInput(float dt, bool isGameFreezed);
+	void UpdateTile(float dt, bool isGameFreezed);
 	int nextWalkingTile(float dt,float threshold);
-	int nextTurningTile( float dt );
+	int nextTurningTile(float dt);
 	void VerifyMapCollision(Map* map);
 	void CollisionEffect(Character* character);
 

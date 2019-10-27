@@ -29,8 +29,11 @@ Spiny::~Spiny(void)
 {
 }
 
-void Spiny::ProcessInput(float dt)
+void Spiny::ProcessInput(float dt, bool isGameFreezed)
 {
+	if (isGameFreezed)
+		return;
+
 	speedX = factorAcceleration * targetSpeedX + (1.0 - factorAcceleration) * speedX;
 	if (abs(speedX) < 0.01) speedX = 0.0;
 
@@ -50,8 +53,11 @@ void Spiny::ProcessInput(float dt)
 	}
 }
 
-void Spiny::UpdateTile(float dt)
+void Spiny::UpdateTile(float dt, bool isGameFreezed)
 {
+	if (isGameFreezed)
+		return;
+
 	if (m_isFalling)
 	{
 		this->SetCurrentTile(m_currentTile, 2);
@@ -147,9 +153,6 @@ void Spiny::VerifyMapCollision(Map* map)
 
 void Spiny::CollisionEffect(Character* character)
 {
-	Spiny* spiny = dynamic_cast<Spiny*>(character);
-	if (spiny !=NULL)
-	{
+	if (dynamic_cast<Spiny*>(character))
 		m_isTurning = true;
-	}
 }
